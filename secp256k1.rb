@@ -31,3 +31,34 @@ require 'securerandom'
 # 秘密鍵。1からGの位数 - 1の範囲でランダムに選ぶ。
 # 推定されないように必ず安全な乱数生成器を使う。randとか使ったらダメぜったい（理由わからない人は結城 浩さんの「暗号技術入門」読むといいです）
 private_key = SecureRandom.random_number(n - 1)
+
+x = 5
+y = 5
+a = 3
+b = 4
+p = 7
+
+def extended_euclid(a, b)
+  return {x: 1, y: 0} if b.zero?
+  prev = extended_euclid(b, a % b)
+ 
+  {
+    x: prev[:y],
+    y: prev[:x] - (a / b) * prev[:y]
+  }
+end
+
+def inverse(value, p)
+  extended_euclid(p, value).dig(:y)
+end
+
+puts inverse((2 * y % p), p) % p
+slope = (((3 * (x**2 % p) % p) + a) % p) * inverse((2 * y % p), p) % p
+
+puts "slope: #{slope}"
+
+new_x = (slope ** 2 - x - y) % p
+new_y = (slope * (x - new_x) -y) % p
+
+puts "x: #{new_x}"
+puts "y: #{new_y}"
