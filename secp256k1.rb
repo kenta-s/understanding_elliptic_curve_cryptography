@@ -61,6 +61,7 @@ class Secp256k1
   end
 
   def multiply(x, y)
+    return [0, 0] if y.zero?
     slope = (((3 * (x**2 % p) % p) + a) % p) * inverse((2 * y % p)) % p
     new_x = (slope ** 2 - x - x) % p
     new_y = (slope * (x - new_x) -y) % p
