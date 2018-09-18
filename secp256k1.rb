@@ -62,7 +62,7 @@ class Secp256k1
 
   def multiply(x, y)
     slope = (((3 * (x**2 % p) % p) + a) % p) * inverse((2 * y % p)) % p
-    new_x = (slope ** 2 - x - y) % p
+    new_x = (slope ** 2 - x - x) % p
     new_y = (slope * (x - new_x) -y) % p
     [new_x, new_y]
   end

@@ -23,14 +23,14 @@ class TestSecp256k1 < Minitest::Test
   end
 
   def test_multiply
-    # assert_equal [1, 6], @secp.multiply(0, 2)
+    assert_equal [1, 6], @secp.multiply(0, 2)
     assert_equal [0, 2], @secp.multiply(1, 1)
     assert_equal [0, 2], @secp.multiply(2, 2)
-    # assert_equal [1, 6], @secp.multiply(5, 2)
+    assert_equal [1, 6], @secp.multiply(5, 2)
     # assert_equal [0, 0], @secp.multiply(6, 0)
     assert_equal [1, 1], @secp.multiply(5, 5)
-    # assert_equal [0, 5], @secp.multiply(2, 5)
-    # assert_equal [0, 5], @secp.multiply(1, 6)
-    # assert_equal [1, 1], @secp.multiply(0, 5)
+    assert_equal [0, 5], @secp.multiply(2, 5)
+    assert_equal [0, 5], @secp.multiply(1, 6)
+    assert_equal [1, 1], @secp.multiply(0, 5)
   end
 end
