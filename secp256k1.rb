@@ -4,7 +4,8 @@ require 'securerandom'
 # y^2 = x^3 + ax + b
 class Secp256k1
   attr_reader :x, :y, :p, :a, :b, :n
-  def initialize(x:,y:,p:,a:,b:)
+
+  def initialize(x: nil, y: nil, p: nil, a: nil, b: nil, n: nil)
     # 基準点（ベース）となるG（x, y）座標はsecp256k1の場合以下の通りに決まっている
     
     @x = x || "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798".to_i(16)
@@ -34,6 +35,13 @@ class Secp256k1
   # 推定されないように必ず安全な乱数生成器を使う。randとか使ったらダメぜったい（理由は結城 浩さんの「暗号技術入門」読むといいです）
   def private_key
     @private_key ||= SecureRandom.random_number(n - 1)
+  end
+
+  def public_key
+    private_key.times do |pkey|
+      1 + 1
+    end
+    puts "done"
   end
 
   def extended_euclid(a, b)
@@ -67,15 +75,22 @@ class Secp256k1
     new_y = (slope * (x - new_x) -y) % p
     [new_x, new_y]
   end
+
+  def scalar
+    private_key.times do |pk|
+      puts pk
+    end
+  end
 end
 
-
-secp = Secp256k1.new(
-  x: 5,
-  y: 5,
-  a: 3,
-  b: 4,
-  p: 7,
-)
-
-secp.test_exec
+# secp = Secp256k1.new(
+#   x: 5,
+#   y: 5,
+#   a: 3,
+#   b: 4,
+#   p: 7,
+#   n: 7
+# )
+# 
+# require 'irb'
+# binding.irb
