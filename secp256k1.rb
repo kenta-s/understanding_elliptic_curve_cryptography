@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'digest'
 
 # 楕円曲線関数
 # y^2 = x^3 + ax + b
@@ -38,7 +39,7 @@ class Secp256k1
   end
 
   def public_key
-    @public_key ||= scalar
+    @public_key ||= scalar(@private_key)
   end
 
   def extended_euclid(a, b)
@@ -73,13 +74,23 @@ class Secp256k1
     [new_x, new_y]
   end
 
-  def scalar
+  def scalar(times)
     new_x = self.x
     new_y = self.y
-    private_key.times do |pk|
+    times.times do |pk|
       new_x, new_y = multiply(new_x, new_y)
     end
     [new_x, new_y]
+  end
+
+  def sign(message)
+    k = SecureRandom.random_number(1..(n - 1))
+    new_point = scalar(k)
+
+    m = Digest::SHA256.hexdigest(message).hex
+    u = new_point[0] % @n
+    v = ((m + u * private_key) / k) % @n
+    [u, v]
   end
 end
 
