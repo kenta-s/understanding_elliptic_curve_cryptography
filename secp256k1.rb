@@ -34,14 +34,11 @@ class Secp256k1
   # 秘密鍵。1からGの位数 - 1の範囲でランダムに選ぶ。
   # 推定されないように必ず安全な乱数生成器を使う。randとか使ったらダメぜったい（理由は結城 浩さんの「暗号技術入門」読むといいです）
   def private_key
-    @private_key ||= SecureRandom.random_number(n - 1)
+    @private_key ||= SecureRandom.random_number(1..(n - 1))
   end
 
   def public_key
-    private_key.times do |pkey|
-      1 + 1
-    end
-    puts "done"
+    @public_key ||= scalar
   end
 
   def extended_euclid(a, b)
@@ -77,19 +74,22 @@ class Secp256k1
   end
 
   def scalar
+    new_x = self.x
+    new_y = self.y
     private_key.times do |pk|
-      puts pk
+      new_x, new_y = multiply(new_x, new_y)
     end
+    [new_x, new_y]
   end
 end
 
 # secp = Secp256k1.new(
-#   x: 5,
-#   y: 5,
+#   x: 0,
+#   y: 2,
 #   a: 3,
 #   b: 4,
 #   p: 7,
-#   n: 7
+#   n: 4
 # )
 # 
 # require 'irb'
